@@ -1,0 +1,11 @@
+.env
+.env.local
+.env.*.local
+!.env.example
+node_modules/
+dist/
+.DS_Store
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+handoff.md
