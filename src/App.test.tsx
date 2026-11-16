@@ -80,6 +80,13 @@ describe('login', () => {
     expect((await screen.findByRole('alert')).textContent).toBe('Não foi possível entrar. Tente de novo.')
   })
 
+  it('CA-02: erro 400 que não é de credencial (e-mail não confirmado) mostra a mensagem geral', async () => {
+    auth.signInWithPassword.mockResolvedValue({ data: {}, error: { code: 'email_not_confirmed', status: 400 } })
+    render(<App />)
+    await preencherEEntrar('ryan@exemplo.local', 'certa')
+    expect((await screen.findByRole('alert')).textContent).toBe('Não foi possível entrar. Tente de novo.')
+  })
+
   it('CA-03: com sessão já existente, abre direto na área logada', async () => {
     auth.getSession.mockResolvedValue({ data: { session: sessao('ryan@exemplo.local') } })
     render(<App />)
@@ -102,5 +109,21 @@ describe('login', () => {
     expect(screen.getByText(/Até 5 itens por pessoa, com prazo de 14 dias úteis/)).toBeTruthy()
     expect(screen.getByText('dias úteis de prazo')).toBeTruthy()
     await waitFor(() => expect(screen.getByText('API ok · banco up')).toBeTruthy())
+  })
+
+  it('CA-07 (spec 001): resposta 401 da API encerra a sessão e volta para a tela de login', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: sessao('ryan@exemplo.local') } })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) =>
+        String(url).endsWith('/health')
+          ? { ok: true, status: 200, json: async () => ({ status: 'ok', database: 'up' }) }
+          : { ok: false, status: 401, json: async () => ({ message: 'Sessão inválida' }) },
+      ),
+    )
+    render(<App />)
+    expect(await screen.findByLabelText('E-mail corporativo')).toBeTruthy()
+    expect(auth.signOut).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('button', { name: 'Sair' })).toBeNull()
   })
 })

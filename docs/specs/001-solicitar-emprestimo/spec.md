@@ -31,6 +31,13 @@ PRD (back): Catálogo, Solicitar, Limite, Atraso, Manutenção · spec 001 do ba
 - CA-07 · Resposta 401 da API encerra a sessão e volta ao login.
 - CA-08 · Toda chamada à API envia `Authorization: Bearer` com o token da sessão.
 
+## Textos e detalhes de interface (propostos pelo agente na implementação, apontados pela rodada 01; revisar)
+- Lista filtrada sem resultado: "Nenhum equipamento encontrado."
+- 401 da API: "Sua sessão expirou." antes de voltar ao login.
+- Enquanto carrega: "Carregando catálogo…"; falha de carga: alerta com o motivo.
+- Nomes de categoria na tela: Notebook, Monitor, Cabo, Câmera, Acessório.
+- Empréstimo cujo equipamento não está no catálogo: "Equipamento".
+
 ## Fora de escopo
 Devolução, tela de Operações, cadastro de equipamento, reserva futura, renovação, notificação. Regras de negócio (limite, atraso, concorrência): provadas no back.
 

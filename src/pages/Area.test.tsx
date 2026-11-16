@@ -136,6 +136,13 @@ describe('sessão e token', () => {
     await waitFor(() => expect(auth.signOut).toHaveBeenCalledTimes(1))
   })
 
+  it('CA-07: resposta 401 ao solicitar também encerra a sessão', async () => {
+    rotas['POST /loans'] = { status: 401, body: { message: 'Sessão inválida' } }
+    renderArea()
+    fireEvent.click(await screen.findByRole('button', { name: 'Solicitar Notebook 14 polegadas' }))
+    await waitFor(() => expect(auth.signOut).toHaveBeenCalledTimes(1))
+  })
+
   it('CA-08: toda chamada à API envia Authorization: Bearer com o token da sessão', async () => {
     rotas['POST /loans'] = { status: 201, body: { id: 'l1', equipmentId: 'e1', dueAt: '2026-12-04T13:00:00.000Z' } }
     renderArea()

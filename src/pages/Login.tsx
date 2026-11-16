@@ -20,7 +20,8 @@ export function Login() {
         email: String(dados.get('email') ?? ''),
         password: String(dados.get('password') ?? ''),
       })
-      if (error) setErro(error.code === 'invalid_credentials' || error.status === 400 ? CREDENCIAL_RECUSADA : FALHA_GERAL)
+      // Só credencial recusada vira a mensagem específica; outros 400 (ex.: e-mail não confirmado) vão para a geral (regra 3).
+      if (error) setErro(error.code === 'invalid_credentials' ? CREDENCIAL_RECUSADA : FALHA_GERAL)
       // Sucesso: o useSession percebe a sessão nova e troca para a área logada.
     } catch {
       setErro(FALHA_GERAL)
