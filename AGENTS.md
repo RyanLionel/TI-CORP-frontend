@@ -41,7 +41,8 @@ Contrato de API: vale o do repo back.
   um `vite.config.js` que o Vite passa a preferir ao `.ts`.
 
 ## Subagentes
-- agents/verificador-spec.md — confere uma spec contra a implementação.
+- agents/verificador-spec.md — confere uma spec contra a implementação. Fonte do subagente;
+  `.claude/agents/verificador-spec.md` é a cópia que o harness (Claude Code e Cursor) lê: edite a fonte e copie.
   Obrigatório antes de declarar qualquer spec pronta. Não corrige nada.
 
 ## Skills
