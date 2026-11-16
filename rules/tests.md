@@ -14,12 +14,14 @@ Ao escrever, alterar ou remover qualquer teste.
 1. Testes não chamam a API nem o banco de produção.
 2. O nome do teste cita o critério que ele prova: `CA-03: ...`.
 3. Teste de endpoint verifica status E corpo.
-4. A biblioteca de testes do front ainda não foi decidida: proponha e
-   espere (rules/restrictions.md). O teste de política de acesso (RLS)
-   vive no repo back.
+4. Runner: Vitest + jsdom + Testing Library (ADR-004). Testes em `src/**/*.test.tsx`;
+   rodam com `npm test`. Chamadas à API e ao Supabase são dublês: o teste de
+   regra de negócio e de política de acesso (RLS) vive no repo back.
+5. Teste de tela verifica o que a pessoa vê (texto, rótulo, papel), não detalhes
+   de implementação.
 
 ## Verificação
-O comando de testes passa. (Ainda não existe suíte: ver rules/checks.md.)
+`npm test` passa.
 
 ## Não faça
 - Não teste o framework ou bibliotecas externas.

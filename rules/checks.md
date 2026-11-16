@@ -11,8 +11,7 @@ alwaysApply: true
 Sempre que você for dizer "pronto", "implementado" ou "funcionando".
 
 ## Procedimento
-1. Testes: ainda não existe suíte neste repositório. Enquanto não existir, escreva "sem suíte de testes" na
-   resposta. Quando existir, rode-a e cole a última linha da saída.
+1. Testes: rode `npm test` (Vitest, ADR-004) e cole a última linha da saída.
 2. Rode `npm run build` (checa tipos e builda) antes de qualquer push. Build que quebra na Vercel é o feedback mais lento e
    mais caro deste projeto.
 3. Rode `git status --short`. Só podem aparecer arquivos do escopo
@@ -29,4 +28,3 @@ trouxe surpresa. As duas coisas, não uma.
 - Não tente consertar a mesma falha duas vezes seguidas sem me mostrar
   a saída do erro.
 - Não rode teste contra a API ou o banco de produção.
-- Não diga "testes passando" quando não existe suíte.

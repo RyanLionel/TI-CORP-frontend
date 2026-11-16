@@ -6,7 +6,7 @@ o PRD ficam em https://github.com/RyanLionel/TI-CORP.
 
 ## Onde olhar
 - PRD e ADR-001 (stack geral): repo back, `docs/PRD.md` e `docs/adr/001-stack.md`.
-- docs/adr/ — decisões deste repo (002 design system).
+- docs/adr/ — decisões deste repo (002 design system, 004 testes com Vitest). A numeração é contínua com o repo back (001 e 003 estão lá).
 - docs/specs/<NNN-nome>/ — spec, plano e tarefas de cada tela.
 - rules/restrictions.md — leia sempre, antes de qualquer tarefa. As demais
   rules têm gatilho próprio (campo "Quando").
@@ -18,6 +18,7 @@ Verificados, a partir da raiz:
 - instalar: `npm install`
 - rodar em desenvolvimento: `npm run dev` (http://localhost:5173)
 - buildar e checar tipos: `npm run build`
+- testes: `npm test` (Vitest, ADR-004; sem API nem Supabase)
 
 ## Ambiente
 - Front em Vite + React + TypeScript (SPA). Deploy na Vercel (projeto ti-corp-frontend).
