@@ -15,11 +15,18 @@ vi.mock('./lib/supabase', () => ({ supabase: { auth } }))
 
 import { App } from './App'
 
-const sessao = (email: string) => ({ user: { email } }) as unknown as Session
+const sessao = (email: string) => ({ user: { email }, access_token: 'tok' }) as unknown as Session
 let ouvinte: Ouvinte = () => {}
 
 beforeEach(() => {
-  vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => ({ status: 'ok', database: 'up' }) })))
+  // /health responde o status; a área logada recebe catálogo e empréstimos vazios.
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => (String(url).endsWith('/health') ? { status: 'ok', database: 'up' } : []),
+    })),
+  )
   auth.getSession.mockResolvedValue({ data: { session: null } })
   auth.onAuthStateChange.mockImplementation((cb: Ouvinte) => {
     ouvinte = cb

@@ -11,5 +11,9 @@ export function App() {
       </p>
     )
   }
-  return sessao.status === 'dentro' ? <Area email={sessao.session.user.email ?? ''} /> : <Login />
+  return sessao.status === 'dentro' ? (
+    <Area email={sessao.session.user.email ?? ''} token={sessao.session.access_token} />
+  ) : (
+    <Login />
+  )
 }

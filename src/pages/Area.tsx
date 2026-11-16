@@ -1,15 +1,65 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { api, ApiError, type Equipamento, type MeuEmprestimo } from '../lib/api'
+import { formatarData } from '../lib/datas'
+import { Catalogo, type Aviso } from '../components/Catalogo'
+import { MeusEmprestimos } from '../components/MeusEmprestimos'
 
-// Área logada (spec 002-login). O catálogo e os empréstimos entram aqui pela spec 001 do front.
-export function Area({ email }: { email: string }) {
+// Área logada: catálogo e meus empréstimos (spec 001 do front), com Sair (spec 002-login).
+export function Area({ email, token }: { email: string; token: string }) {
   const [saindo, setSaindo] = useState(false)
+  const [equipamentos, setEquipamentos] = useState<Equipamento[] | null>(null)
+  const [meus, setMeus] = useState<MeuEmprestimo[]>([])
+  const [erroCarga, setErroCarga] = useState<string | null>(null)
+  const [aviso, setAviso] = useState<Aviso>(null)
+  const [ocupado, setOcupado] = useState(false)
 
-  async function sair() {
+  const sair = useCallback(async () => {
     if (!supabase) return
     setSaindo(true)
     await supabase.auth.signOut()
     // O useSession percebe o fim da sessão e volta para o login.
+  }, [])
+
+  // 401 da API: sessão inválida ou expirada; volta ao login (CA-07).
+  const tratar = useCallback(
+    (e: unknown): string => {
+      if (e instanceof ApiError && e.status === 401) {
+        void sair()
+        return 'Sua sessão expirou.'
+      }
+      return e instanceof Error ? e.message : 'Não foi possível falar com a API.'
+    },
+    [sair],
+  )
+
+  const carregar = useCallback(async () => {
+    try {
+      const [lista, meusEmprestimos] = await Promise.all([api.equipamentos(token), api.meusEmprestimos(token)])
+      setEquipamentos(lista)
+      setMeus(meusEmprestimos)
+      setErroCarga(null)
+    } catch (e) {
+      setErroCarga(tratar(e))
+    }
+  }, [token, tratar])
+
+  useEffect(() => {
+    void carregar()
+  }, [carregar])
+
+  async function solicitar(id: string) {
+    setOcupado(true)
+    setAviso(null)
+    try {
+      const novo = await api.solicitar(token, id)
+      setAviso({ tipo: 'ok', texto: `Empréstimo criado. Devolução até ${formatarData(novo.dueAt)}` })
+      await carregar()
+    } catch (e) {
+      setAviso({ tipo: 'erro', texto: tratar(e) })
+    } finally {
+      setOcupado(false)
+    }
   }
 
   return (
@@ -27,8 +77,22 @@ export function Area({ email }: { email: string }) {
         </button>
       </header>
       <main className="area-body">
-        <h1>Catálogo</h1>
-        <p className="support">Em construção.</p>
+        {erroCarga ? (
+          <p className="notice notice-erro" role="alert">
+            {erroCarga}
+          </p>
+        ) : null}
+        {equipamentos === null && !erroCarga ? (
+          <p className="support" role="status">
+            Carregando catálogo…
+          </p>
+        ) : null}
+        {equipamentos ? (
+          <>
+            <Catalogo equipamentos={equipamentos} aviso={aviso} ocupado={ocupado} onSolicitar={solicitar} />
+            <MeusEmprestimos emprestimos={meus} equipamentos={equipamentos} />
+          </>
+        ) : null}
       </main>
     </div>
   )
