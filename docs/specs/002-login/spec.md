@@ -1,6 +1,6 @@
 # Spec — Login real (Supabase Auth)
 
-> Status: rascunho. Decisões fechadas por Ryan em 2026-11-16.
+> Status: pronta (2026-11-16). Decisões fechadas por Ryan em 2026-11-16; verificação: verificacoes/rodada-02.md (PRONTA, commit c5c59c3).
 
 ## Objetivo
 A pessoa entra com e-mail e senha pelo Supabase Auth, chega à área logada e consegue sair. Substitui o login de protótipo da spec 000.

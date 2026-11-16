@@ -1,6 +1,6 @@
 # Spec — Solicitar empréstimo (lado do front)
 
-> Status: rascunho. Decisões fechadas por Ryan em 2026-11-16.
+> Status: pronta (2026-11-16). Decisões fechadas por Ryan em 2026-11-16; verificação: verificacoes/rodada-02.md (PRONTA, commit c5c59c3).
 > Dona do comportamento e do contrato: spec 001 do repo back (TI-CORP, docs/specs/001-solicitar-emprestimo). Esta spec cobre só as telas; regra de negócio, banco e RLS são provados lá.
 
 ## Objetivo
