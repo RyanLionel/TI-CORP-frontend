@@ -1,6 +1,6 @@
 # Spec — Devolver empréstimo (front)
 
-> Status: rascunho (2026-11-17). Aprovada pelo Ryan em 2026-11-17 ("aprovo"); código escrito, aguardando checks e verificador.
+> Status: pronta (2026-11-17). Aprovada pelo Ryan em 2026-11-17; verificação: verificacoes/rodada-01.md (PRONTA, commit e462821).
 
 ## Objetivo
 Em "Meus empréstimos", o colaborador devolve um item com um clique e vê o resultado na hora.
