@@ -12,6 +12,7 @@ export type Equipamento = {
 }
 export type MeuEmprestimo = { id: string; equipmentId: string; dueAt: string; atrasado: boolean }
 export type NovoEmprestimo = { id: string; equipmentId: string; dueAt: string }
+export type Devolucao = { id: string; returnedAt: string }
 
 export class ApiError extends Error {
   constructor(
@@ -44,4 +45,7 @@ export const api = {
   meusEmprestimos: (token: string) => apiFetch<MeuEmprestimo[]>('/loans/me', token),
   solicitar: (token: string, equipmentId: string) =>
     apiFetch<NovoEmprestimo>('/loans', token, { method: 'POST', body: JSON.stringify({ equipmentId }) }),
+  // Spec 003 do front · contrato da spec 005 do back
+  devolver: (token: string, loanId: string) =>
+    apiFetch<Devolucao>(`/loans/${encodeURIComponent(loanId)}/return`, token, { method: 'POST' }),
 }

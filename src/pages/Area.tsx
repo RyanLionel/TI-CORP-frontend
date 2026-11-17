@@ -13,6 +13,7 @@ export function Area({ email, token }: { email: string; token: string }) {
   const [erroCarga, setErroCarga] = useState<string | null>(null)
   const [aviso, setAviso] = useState<Aviso>(null)
   const [ocupado, setOcupado] = useState(false)
+  const [avisoDevolucao, setAvisoDevolucao] = useState<Aviso>(null)
 
   const sair = useCallback(async () => {
     if (!supabase) return
@@ -62,6 +63,21 @@ export function Area({ email, token }: { email: string; token: string }) {
     }
   }
 
+  // Spec 003 do front: devolver um empréstimo próprio
+  async function devolver(loanId: string) {
+    setOcupado(true)
+    setAvisoDevolucao(null)
+    try {
+      await api.devolver(token, loanId)
+      setAvisoDevolucao({ tipo: 'ok', texto: 'Devolução registrada.' })
+      await carregar()
+    } catch (e) {
+      setAvisoDevolucao({ tipo: 'erro', texto: tratar(e) })
+    } finally {
+      setOcupado(false)
+    }
+  }
+
   return (
     <div className="area">
       <header className="area-top">
@@ -90,7 +106,13 @@ export function Area({ email, token }: { email: string; token: string }) {
         {equipamentos ? (
           <>
             <Catalogo equipamentos={equipamentos} aviso={aviso} ocupado={ocupado} onSolicitar={solicitar} />
-            <MeusEmprestimos emprestimos={meus} equipamentos={equipamentos} />
+            <MeusEmprestimos
+              emprestimos={meus}
+              equipamentos={equipamentos}
+              aviso={avisoDevolucao}
+              ocupado={ocupado}
+              onDevolver={devolver}
+            />
           </>
         ) : null}
       </main>
